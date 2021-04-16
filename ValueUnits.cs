@@ -6,7 +6,7 @@ namespace ConversionSolver
 {
 	public class ValueUnits
 	{
-		public double value { get; set; }
+		public string value { get; set; }
 		public string units { get; set; }
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace ConversionSolver
 				return null;
 
 			ValueUnits valueUnits = new ValueUnits();
-			valueUnits.value = RegexHelper.GetValue<double>(matches, "value");
+			valueUnits.value = RegexHelper.GetValue<string>(matches, "value");
 			valueUnits.units = RegexHelper.GetValue<string>(matches, "units");
 			return valueUnits;
 		}

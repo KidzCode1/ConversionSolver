@@ -16,7 +16,7 @@ namespace ConversionSolver
 		/// <returns>Returns the new FactData, or null if a no matches were found for the specified input.</returns>
 		public static FactData Create(string input)
 		{
-			const string pattern = @"(?<data1>[+-]?((\d+(\.\d+)?))\s*\w+).*(?<data2>[+-]?((\d+(\.\d+)?))\s*\w+)";
+			const string pattern = @"(?<data1>[+-]?((\d+(\.\d+)?))\s*\w+).*\s(?<data2>[+-]?((\d+(\.\d+)?))\s*\w+)";
 
 			Regex regex = new Regex(pattern);
 			MatchCollection matches = regex.Matches(input);

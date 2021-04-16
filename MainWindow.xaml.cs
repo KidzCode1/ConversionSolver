@@ -25,12 +25,38 @@ namespace ConversionSolver
 			InitializeComponent();
 		}
 
+		public static System.IO.Stream GenerateStreamFromString(string s)
+		{
+			var stream = new System.IO.MemoryStream();
+			var writer = new System.IO.StreamWriter(stream);
+			writer.Write(s);
+			writer.Flush();
+			stream.Position = 0;
+			return stream;
+		}
+
+		double GetKahnAcademyDataValueFrom(string value)
+		{
+			if (value.Length % 3 == 0)
+			{
+				string realValueAsStr = value.Substring(0, value.Length / 3);
+				if (double.TryParse(realValueAsStr, out double result))
+					return result;
+			}
+			if (double.TryParse(value, out double result2))
+				return result2;
+			return 0;
+		}
 		private void btnPaste_Click(object sender, RoutedEventArgs e)
 		{
+			if (Clipboard.ContainsText(TextDataFormat.Html))
+			{
+				string htmlText = Clipboard.GetText(TextDataFormat.Html);
+				//System.Xml.Linq.XDocument xDocument = System.Xml.Linq.XDocument.Load(GenerateStreamFromString(htmlText));
+			}
+
 			string text = Clipboard.GetText();
 			FactQuestion factQuestion = FactQuestion.Create(text);
-			tbxFact.Text = factQuestion.Fact + '.';
-			tbxQuestion.Text = factQuestion.Question+'?';
 
 
 			FactData factData = FactData.Create(factQuestion.Fact);
@@ -43,17 +69,26 @@ namespace ConversionSolver
 			double top;
 			double bottom;
 			string units;
+			double data1Value = GetKahnAcademyDataValueFrom(data1.value);
+			double data2Value = GetKahnAcademyDataValueFrom(data2.value); ;
+			double questionValue = GetKahnAcademyDataValueFrom(question.value);
+
+			tbxFact.Text = factQuestion.Fact.Replace(data1.value, data1Value.ToString()).Replace(data2.value, data2Value.ToString()) + '.';
+			tbxQuestion.Text = factQuestion.Question.Replace(question.value, questionValue.ToString()) + '?';
+
+
+
 			if (question.units == data1.units)
 			{
 				units = data2.units;
-				top = data2.value;
-				bottom = data1.value;
+				top = data2Value;
+				bottom = data1Value;
 			}
 			else if (question.units == data2.units)
 			{
 				units = data1.units;
-				top = data1.value;
-				bottom = data2.value;
+				top = data1Value;
+				bottom = data2Value;
 			}
 			else
 			{
@@ -62,13 +97,9 @@ namespace ConversionSolver
 			}
 
 			Title = $"Answer units are in {units}.";
-			double answer = question.value * top / bottom;
+			double answer = questionValue * top / bottom;
 			tbAnswer.Text = $"{answer} {units}";
-			if (Clipboard.ContainsText(TextDataFormat.Html))
-			{
-				string htmlText = Clipboard.GetText(TextDataFormat.Html);
-				
-			}
+
 		}
 	}
 }
