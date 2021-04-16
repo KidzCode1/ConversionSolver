@@ -6,7 +6,53 @@
         xmlns:local="clr-namespace:ConversionSolver"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Border Padding="12">
+        <StackPanel Orientation="Vertical">
+            <Button x:Name="btnPaste" Width="120" Height="120" HorizontalAlignment="Left" Click="btnPaste_Click" >
+                <Viewbox>
+                    <Canvas Width="2378" Height="3334">
+                        <Canvas>
+                            <Canvas.Clip>
+                                <RectangleGeometry Rect="0,1,2379,3334" />
+                            </Canvas.Clip>
+                            <Path Fill="#FFA46D24">
+                                <Path.Data>
+                                    <PathGeometry Figures="M776.125,0.5L1602,0.5C1760.5,0.5,1892.625,113,1923.25,262.375L1924.75,277.125 2274.25,277.125C2331.875,277.125,2378.5,323.75,2378.5,381.5L2378.5,3230.25C2378.5,3287.875,2331.875,3334.5,2274.25,3334.5L103.875,3334.5C46.25,3334.5,-0.5,3287.875,-0.5,3230.25L-0.5,381.5C-0.5,323.75,46.25,277.125,103.875,277.125L453.375,277.125 454.875,262.375C485.5,113,617.625,0.5,776.125,0.5z" />
+                                </Path.Data>
+                            </Path>
+                        </Canvas>
+                        <Path Fill="#FFFFFFFF">
+                            <Path.Data>
+                                <PathGeometry Figures="M162.5,584.625C162.5,531,206,487.5,259.625,487.5L2119.5,487.5C2173.125,487.5,2216.5,531,2216.5,584.625L2216.5,3056.5C2216.5,3110.125,2173.125,3153.5,2119.5,3153.5L259.625,3153.5C206,3153.5,162.5,3110.125,162.5,3056.5z" />
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="#FFDAE3F3" Stroke="{x:Null}">
+                            <Path.Data>
+                                <PathGeometry Figures="M375.5,2710.5L2003.5,2710.5 2003.5,2903.5 375.5,2903.5 375.5,2710.5z M375.5,2315.875L2003.5,2315.875 2003.5,2509 375.5,2509 375.5,2315.875z M375.5,1921.25L2003.5,1921.25 2003.5,2114.375 375.5,2114.375 375.5,1921.25z M375.5,1526.75L2003.5,1526.75 2003.5,1719.875 375.5,1719.875 375.5,1526.75z M375.5,1132.125L2003.5,1132.125 2003.5,1325.25 375.5,1325.25 375.5,1132.125z M375.5,737.5L2003.5,737.5 2003.5,930.625 375.5,930.625 375.5,737.5z" />
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="#FFAFABAB">
+                            <Path.Data>
+                                <PathGeometry Figures="M764.375,0.5L1616.5,0.5C1774.375,0.5,1906.125,109.5625,1936.5625,254.5L1939.6875,284.8125 1942.1875,284.8125 1994.5,526.5 373.5,521.875 434.0625,284.8125 441.1875,284.8125 444.3125,254.5C474.8125,109.5625,606.5,0.5,764.375,0.5z" />
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                </Viewbox>
+            </Button>
+            <StackPanel Orientation="Horizontal" Height="25" VerticalAlignment="Top" Margin="0, 20, 0, 0">
+                <TextBlock Text="Fact: " Width="Auto" Height="Auto" VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxFact" VerticalAlignment="Center" MinWidth="300">
+                    Sample text
+                </TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="25" VerticalAlignment="Top">
+                <TextBlock Text="Question: " Width="Auto" Height="Auto" VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxQuestion" VerticalAlignment="Center" MinWidth="300">
+                    Sample text
+                </TextBox>
+            </StackPanel>
+            <TextBlock Text="The answer is: " Width="Auto" Height="Auto"/>
+            <TextBlock x:Name="tbAnswer" Text="" Width="Auto" Height="Auto" FontSize="24" />
+        </StackPanel>
+    </Border>
 </Window>
