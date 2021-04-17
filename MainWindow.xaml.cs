@@ -25,27 +25,23 @@ namespace ConversionSolver
 			InitializeComponent();
 		}
 
-		public static System.IO.Stream GenerateStreamFromString(string s)
+		double GetDataValueFrom(string value, bool fromKahnAcademy)
 		{
-			var stream = new System.IO.MemoryStream();
-			var writer = new System.IO.StreamWriter(stream);
-			writer.Write(s);
-			writer.Flush();
-			stream.Position = 0;
-			return stream;
-		}
-
-		double GetKahnAcademyDataValueFrom(string value)
-		{
-			if (value.Length % 3 == 0)
+			if (fromKahnAcademy && (value.Length % 3 == 0))
 			{
 				string realValueAsStr = value.Substring(0, value.Length / 3);
 				if (double.TryParse(realValueAsStr, out double result))
 					return result;
 			}
+
 			if (double.TryParse(value, out double result2))
 				return result2;
 			return 0;
+		}
+
+		void NoErrors()
+		{
+			Background = new SolidColorBrush(Colors.White);
 		}
 		private void btnPaste_Click(object sender, RoutedEventArgs e)
 		{
@@ -59,32 +55,78 @@ namespace ConversionSolver
 			FactQuestion factQuestion = FactQuestion.Create(text);
 
 
-			FactData factData = FactData.Create(factQuestion.Fact);
 			QuestionData questionData = QuestionData.Create(factQuestion.Question);
+			
+			ValueUnits data1, data2, question;
+			double data1Value, data2Value, questionValue;
+			try
+			{
+				GetQuestionData(factQuestion.Fact, questionData.question, true, out data1, out data2, out question, out data1Value, out data2Value, out questionValue);
+			}
+			catch (Exception ex)
+			{
+				ShowError(ex);
+				return;
+			}
+			NoErrors();
+			changingInternally = true;
+			try
+			{
+				tbxQuestion.Text = factQuestion.Question.Replace(question.value, questionValue.ToString()) + '?';
+				tbxFact.Text = factQuestion.Fact.Replace(data1.value, data1Value.ToString()).Replace(data2.value, data2Value.ToString()) + '.';
+			}
+			finally
+			{
+				changingInternally = false;
+			}
 
-			ValueUnits data1 = ValueUnits.Create(factData.data1);
-			ValueUnits data2 = ValueUnits.Create(factData.data2);
-			ValueUnits question = ValueUnits.Create(questionData.question);
+			AnswerQuestion();
+		}
+
+		private void ShowError(Exception ex)
+		{
+			Title = ex.Message;
+			Background = new SolidColorBrush(Color.FromRgb(255, 138, 138));
+		}
+
+		bool changingInternally;
+
+		private void GetQuestionData(string fact, string question, bool fromKahnAcademy, out ValueUnits data1, out ValueUnits data2, out ValueUnits questionValueUnit, out double data1Value, out double data2Value, out double questionValue)
+		{
+			FactData factData = FactData.Create(fact);
+			data1 = ValueUnits.Create(factData.data1);
+			data2 = ValueUnits.Create(factData.data2);
+			questionValueUnit = ValueUnits.Create(question);
+			data1Value = GetDataValueFrom(data1.value, fromKahnAcademy);
+			data2Value = GetDataValueFrom(data2.value, fromKahnAcademy);
+			questionValue = GetDataValueFrom(questionValueUnit.value, fromKahnAcademy);
+		}
+
+		void AnswerQuestion()
+		{
+			ValueUnits data1, data2, question;
+			double data1Value, data2Value, questionValue;
+			try
+			{
+				GetQuestionData(tbxFact.Text, tbxQuestion.Text, false, out data1, out data2, out question, out data1Value, out data2Value, out questionValue);
+			}
+			catch (Exception ex)
+			{
+				ShowError(ex);
+				return;
+			}
+			NoErrors();
 
 			double top;
 			double bottom;
 			string units;
-			double data1Value = GetKahnAcademyDataValueFrom(data1.value);
-			double data2Value = GetKahnAcademyDataValueFrom(data2.value); ;
-			double questionValue = GetKahnAcademyDataValueFrom(question.value);
-
-			tbxFact.Text = factQuestion.Fact.Replace(data1.value, data1Value.ToString()).Replace(data2.value, data2Value.ToString()) + '.';
-			tbxQuestion.Text = factQuestion.Question.Replace(question.value, questionValue.ToString()) + '?';
-
-
-
-			if (question.units == data1.units)
+			if (UnitsMatch(data1, question))
 			{
 				units = data2.units;
 				top = data2Value;
 				bottom = data1Value;
 			}
-			else if (question.units == data2.units)
+			else if (UnitsMatch(data2, question))
 			{
 				units = data1.units;
 				top = data1Value;
@@ -99,7 +141,28 @@ namespace ConversionSolver
 			Title = $"Answer units are in {units}.";
 			double answer = questionValue * top / bottom;
 			tbAnswer.Text = $"{answer} {units}";
+		}
 
+		private static bool UnitsMatch(ValueUnits data1, ValueUnits data2)
+		{
+			string unit1 = data1.units.ToLower().TrimEnd('s');
+			string unit2 = data2.units.ToLower().TrimEnd('s');
+
+			return unit1 == unit2;
+		}
+
+		private void tbxFact_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (changingInternally)
+				return;
+			AnswerQuestion();
+		}
+
+		private void tbxQuestion_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (changingInternally)
+				return;
+			AnswerQuestion();
 		}
 	}
 }

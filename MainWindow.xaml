@@ -44,13 +44,13 @@
             </Button>
             <StackPanel Orientation="Horizontal" Height="25" VerticalAlignment="Top" Margin="0, 20, 0, 0">
                 <TextBlock Text="Fact: " Width="Auto" Height="Auto" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxFact" VerticalAlignment="Center" MinWidth="300">
+                <TextBox x:Name="tbxFact" VerticalAlignment="Center" MinWidth="300" TextChanged="tbxFact_TextChanged" >
                     
                 </TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="25" VerticalAlignment="Top">
                 <TextBlock Text="Question: " Width="Auto" Height="Auto" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxQuestion" VerticalAlignment="Center" MinWidth="300">
+                <TextBox x:Name="tbxQuestion" VerticalAlignment="Center" MinWidth="300" TextChanged="tbxQuestion_TextChanged">
                     
                 </TextBox>
             </StackPanel>
